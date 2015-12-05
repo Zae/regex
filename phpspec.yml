@@ -1,0 +1,6 @@
+suites:
+    regex_suite:
+        namespace: Zae\Regex
+        psr4_prefix: Zae\Regex
+        src_path: %paths.config%/src
+        spec_path: %paths.config%/tests/
