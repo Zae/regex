@@ -25,6 +25,7 @@
     },
     "minimum-stability": "stable",
     "require": {
+        "php": ">=5.4",
         "illuminate/support": "^5.1"
     }
 }

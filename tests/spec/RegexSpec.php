@@ -4,6 +4,8 @@ namespace spec\Zae\Regex;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Zae\Regex\Regex;
+use Zae\Regex\RegularExpressions;
 
 class RegexSpec extends ObjectBehavior
 {
@@ -85,5 +87,33 @@ class RegexSpec extends ObjectBehavior
 
         $this->filter('testsomestring', 'yes$1true')->shouldReturn('yessometrue');
         $this->filter('testsomestringsomethingelsetestsomestring', 'yes$1true')->shouldReturn(null);
+    }
+
+    function it_can_automatically_quote_patterns()
+    {
+        $this->quote('some[text]')->shouldReturn('some\[text\]');
+    }
+
+    function it_can_show_errors()
+    {
+        $this->getLastError()->shouldReturn(PREG_NO_ERROR);
+    }
+
+    function it_supports_callables_as_replacement()
+    {
+        $this->beConstructedWith('|(\d{2}/\d{2}/)(\d{4})|');
+
+        $this->replace("April fools day is 04/01/2002\nLast christmas was 12/24/2001\n", function ($matches)
+        {
+            return $matches[1].($matches[2]+1);
+        })
+        ->shouldReturn("April fools day is 04/01/2003\nLast christmas was 12/24/2002\n");
+    }
+
+    function it_supports_grep()
+    {
+        $this->beConstructedWith('/^(\d+)?\.\d+$/');
+
+        $this->grep(["1.0", 1.1, 1, 2, 2.3, 4])->shouldReturn(["1.0", 1.1, 4 => 2.3]);
     }
 }
